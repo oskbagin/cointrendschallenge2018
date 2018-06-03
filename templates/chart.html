@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ head_title }}</title>
+    <script src='static/Chart.min.js'></script>
+    <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/xCWsyM7.png"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div>
+      <div style>
+        <h1>
+            <span>
+              <img src="https://i.imgur.com/f1f3rYL.png" alt="kainos-sticky-logo">
+            </span>
+          <span style="float: right; padding-right: 50%; padding-top: 10px">
+            {{ head_title }}
+          </span>
+        </h1>
+      </div>
+    
+    <div>
+      <form method="POST">
+        <div style="padding-bottom: 10px"></div>
+          <input type="checkbox" name="plot" value="BTCUSD" checked>
+          <label for="BTCUSD">BTCUSD</label>
+          <input type="checkbox" name="plot" value="ETHUSD">
+          <label for="ETHUSD">ETHUSD</label>
+          <input type="checkbox" name="plot" value="LTCUSD">
+          <label for="LTCUSD" style="padding-right: 10%" >LTCUSD</label>
+
+          <input type="radio" name="time-range" value="daily">
+          <label for="daily">Daily</label>
+          <input type="radio" name="time-range" value="monthly" checked="checked">
+          <label for="monthly">Monthly</label>
+          <input type="radio" name="time-range" value="alltime">
+          <label for="alltime">Alltime</label>
+
+        </div>
+        <div style="padding-bottom: 10px">
+          <span>Start date</span> 
+          <input name="start-date" type="date" required>
+          <span>End date</span> 
+          <input name="end-date" type="date"required>   
+        </div>
+        <input type="submit" value="Generate!">
+     </form>
+    </div>
+
+    <div>
+      <canvas id="myChart" width="1300%" height="400%"></canvas>
+    </div>
+    </div>
+    <script>
+      if({{ renderChart }} == 1){
+      Chart.defaults.global.responsive = false;
+
+      // populating chart data
+      var chartData = {
+        labels : [{% for item in labels %}
+                   "{{item}}",
+                  {% endfor %}],
+        datasets : [{
+            label: '{{ legend }}',
+            fill: false,
+            lineWidth: 0.1,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'round',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'round',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "rgba(75,192,192,1)",
+            pointBorderWidth: 1,
+            pointHoverRadius: 1,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0.1,
+            pointHitRadius: 1,
+            data : [{% for item in values %}
+                      {{item}},
+                    {% endfor %}],
+            spanGaps: false
+        }]
+      }
+
+      // get chart canvas
+      var ctx = document.getElementById("myChart").getContext("2d");
+
+      // create the chart using the chart canvas
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+      });
+    }
+    </script>
+
+  </body>
+</html>
